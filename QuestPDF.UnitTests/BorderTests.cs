@@ -42,16 +42,19 @@ namespace QuestPDF.UnitTests
                     Bottom = 30,
                     Left = 40,
                     
-                    Color = Colors.Red.Medium,
-                    
+                    TopColor = Colors.Red.Medium,
+                    LeftColor = Colors.Green.Medium,
+                    BottomColor = Colors.Blue.Medium,
+                    RightColor = Colors.Orange.Medium,
+
                     Child = x.CreateChild()
                 })
                 .DrawElement(new Size(400, 300))
                 .ExpectChildDraw(new Size(400, 300))
                 .ExpectCanvasDrawRectangle(new Position(-20, -5), new Size(430, 10), Colors.Red.Medium) // top
-                .ExpectCanvasDrawRectangle(new Position(-20, -5), new Size(40, 320), Colors.Red.Medium) // left
-                .ExpectCanvasDrawRectangle(new Position(-20, 285), new Size(430, 30), Colors.Red.Medium) // bottom
-                .ExpectCanvasDrawRectangle(new Position(390, -5), new Size(20, 320), Colors.Red.Medium) // right
+                .ExpectCanvasDrawRectangle(new Position(-20, -5), new Size(40, 320), Colors.Green.Medium) // left
+                .ExpectCanvasDrawRectangle(new Position(-20, 285), new Size(430, 30), Colors.Blue.Medium) // bottom
+                .ExpectCanvasDrawRectangle(new Position(390, -5), new Size(20, 320), Colors.Orange.Medium) // right
                 .ExpectChildDraw(new Size(400, 300))
                 .CheckDrawResult();
         }

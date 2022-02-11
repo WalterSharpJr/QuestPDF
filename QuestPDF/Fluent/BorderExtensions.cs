@@ -48,10 +48,30 @@ namespace QuestPDF.Fluent
         {
             return element.Border(x => x.Bottom = value);
         }
-        
+
         public static IContainer BorderColor(this IContainer element, string color)
         {
-            return element.Border(x => x.Color = color);
+            return element.Border(x => x.TopColor = x.BottomColor = x.RightColor = x.LeftColor = color);
+        }
+
+        public static IContainer BorderTopColor(this IContainer element, string color)
+        {
+            return element.Border(x => x.TopColor = color);
+        }
+
+        public static IContainer BorderBottomColor(this IContainer element, string color)
+        {
+            return element.Border(x => x.BottomColor = color);
+        }
+
+        public static IContainer BorderLeftColor(this IContainer element, string color)
+        {
+            return element.Border(x => x.LeftColor = color);
+        }
+
+        public static IContainer BorderRightColor(this IContainer element, string color)
+        {
+            return element.Border(x => x.RightColor = color);
         }
     }
 }
