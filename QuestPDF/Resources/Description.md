@@ -71,15 +71,15 @@ void ComposeHeader(IContainer container)
     container.Row(row =>
     {
         {
-            stack.Item().Text($"Invoice #{Model.InvoiceNumber}", titleStyle);
+            column.Item().Text($"Invoice #{Model.InvoiceNumber}", titleStyle);
 
-            stack.Item().Text(text =>
+            column.Item().Text(text =>
             {
                 text.Span("Issue date: ", TextStyle.Default.SemiBold());
                 text.Span($"{Model.IssueDate:d}");
             });
 
-            stack.Item().Text(text =>
+            column.Item().Text(text =>
             {
                 text.Span("Due date: ", TextStyle.Default.SemiBold());
                 text.Span($"{Model.DueDate:d}");
@@ -97,7 +97,7 @@ Implementation of **the content area** that contains seller and customer details
 ```csharp
 void ComposeContent(IContainer container)
 {
-    container.PaddingVertical(40).Stack(column => 
+    container.PaddingVertical(40).column(column => 
     {
         column.Spacing(20);
         
@@ -132,41 +132,42 @@ void ComposeTable(IContainer container)
 {
     var headerStyle = TextStyle.Default.SemiBold();
     
-    container.Decoration(decoration =>
+    container.Table(table =>
     {
-        // header
-        decoration.Header().BorderBottom(1).Padding(5).Row(row => 
+        table.ColumnsDefinition(columns =>
         {
-            row.ConstantColumn(25).Text("#", headerStyle);
-            row.RelativeColumn(3).Text("Product", headerStyle);
-            row.RelativeColumn().AlignRight().Text("Unit price", headerStyle);
-            row.RelativeColumn().AlignRight().Text("Quantity", headerStyle);
-            row.RelativeColumn().AlignRight().Text("Total", headerStyle);
+            columns.ConstantColumn(25);
+            columns.RelativeColumn(3);
+            columns.RelativeColumn();
+            columns.RelativeColumn();
+            columns.RelativeColumn();
         });
-
-        // content
-        decoration
-            .Content()
-            .Stack(column =>
+        
+        table.Header(header =>
+        {
+            header.Cell().Text("#", headerStyle);
+            header.Cell().Text("Product", headerStyle);
+            header.Cell().AlignRight().Text("Unit price", headerStyle);
+            header.Cell().AlignRight().Text("Quantity", headerStyle);
+            header.Cell().AlignRight().Text("Total", headerStyle);
+            
+            header.Cell().ColumnSpan(5)
+                  .PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+        });
+        
+        foreach (var item in Model.Items)
+        {
+            table.Cell().Element(CellStyle).Text(Model.Items.IndexOf(item) + 1);
+            table.Cell().Element(CellStyle).Text(item.Name);
+            table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price}$");
+            table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity);
+            table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price * item.Quantity}$");
+            
+            static IContainer CellStyle(IContainer container)
             {
-                foreach (var item in Model.Items)
-                {
-                    column
-                    .Item()
-                    .ShowEntire()
-                    .BorderBottom(1)
-                    .BorderColor(Colors.Grey.Lighten2)
-                    .Padding(5)
-                    .Row(row => 
-                    {
-                        row.ConstantColumn(25).Text(Model.Items.IndexOf(item) + 1);
-                        row.RelativeColumn(3).Text(item.Name);
-                        row.RelativeColumn().AlignRight().Text($"{item.Price}$");
-                        row.RelativeColumn().AlignRight().Text(item.Quantity);
-                        row.RelativeColumn().AlignRight().Text($"{item.Price * item.Quantity}$");
-                    });
-                }
-            });
+                container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
+            }
+        }
     });
 }
 ```
@@ -174,7 +175,7 @@ void ComposeTable(IContainer container)
 ```csharp
 void ComposeComments(IContainer container)
 {
-    container.ShowEntire().Background(Colors.Grey.Lighten3).Padding(10).Stack(message => 
+    container.ShowEntire().Background(Colors.Grey.Lighten3).Padding(10).column(message => 
     {
         message.Spacing(5);
         message.Item().Text("Comments", TextStyle.Default.Size(14).SemiBold());
@@ -200,7 +201,7 @@ public class AddressComponent : IComponent
     
     public void Compose(IContainer container)
     {
-        container.ShowEntire().Stack(column =>
+        container.ShowEntire().column(column =>
         {
             column.Spacing(5);
 
